@@ -30,12 +30,6 @@ const handleSignInWithApple = () => {
   .then((result) => {
     // The signed-in user info.
     const user = result.user;
-
-    // Apple credential
-    const credential = OAuthProvider.credentialFromResult(result);
-    const accessToken = credential.accessToken;
-    const idToken = credential.idToken;
-
     // IdP data available using getAdditionalUserInfo(result)
     // ...
   })
@@ -60,8 +54,6 @@ export default function Home()
     signInWithPopup(auth, provider)
       .then((result) => {
         // Handle the authentication success
-        const credential = GoogleAuthProvider.credentialFromResult(result);
-        const token = credential.accessToken;
         const user = result.user;
         // You can also navigate to another page or update the UI here
       })
