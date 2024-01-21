@@ -39,13 +39,15 @@ const handleSignInWithGoogle = () => {
 export default function Home()
 {
   return (
-    <main className = "flex min-h-screen flex-col items-center jsutify-between p-24">
-      <div className="z-10 max-w-5xl w-full items-center justify between font-mono text-sm lg:flex">
-        <div className="flex p-30">
-          <h1 className="text-center text-black text-2xl font-semibold">
+    <main className = "flex min-h-screen flex-col items-center justify-between p-24 bg-gray-200">
+      <div className="grid z-10 max-w-5xl w-full items-center justify between font-mono text-sm lg:flex">
+        <div className="content-center mb-32 grid text-center lg:max-w-5xl lg:w-full lg:mb-0 lg:grid-cols-4 lg:text-left">
+          <h1 className="text-lg text-center font-semibold">
               Sign in with one of the following services:
           </h1>
-          <GoogleButton onClick={handleSignInWithGoogle} className="relative flex place-items-center">Sign in with Google</GoogleButton>
+        </div>
+        <div className="py-4 object-center">
+          <GoogleButton onClick={handleSignInWithGoogle}>Sign in with Google</GoogleButton>
         </div> 
       </div>
     </main>
