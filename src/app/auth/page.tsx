@@ -1,7 +1,9 @@
 'use client'
-import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { getAuth, GoogleAuthProvider, signInWithPopup, OAuthProvider, onAuthStateChanged } from "firebase/auth";
 import { initializeApp } from "firebase/app"
 import GoogleButton from "react-google-button";
+import AppleLogin from 'react-apple-login'
+import Image from "next/image";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDLxHL1vxPOHmJC93QpjVb_Bx1Y47mqha8",
@@ -15,9 +17,42 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth();
-const provider = new GoogleAuthProvider();
+
+const handleSignInWithApple = () => {
+  const provider = new OAuthProvider('apple.com');
+  
+  // Single email
+  provider.addScope('email');
+  provider.addScope('name');
+
+  signInWithPopup(auth, provider)
+  .then((result) => {
+    // The signed-in user info.
+    const user = result.user;
+
+    // Apple credential
+    const credential = OAuthProvider.credentialFromResult(result);
+    const accessToken = credential.accessToken;
+    const idToken = credential.idToken;
+
+    // IdP data available using getAdditionalUserInfo(result)
+    // ...
+  })
+  .catch((error) => {
+    // Handle Errors here.
+    const errorCode = error.code;
+    const errorMessage = error.message;
+    // The email of the user's account used.
+    const email = error.customData.email;
+    // The credential that was used.
+    const credential = OAuthProvider.credentialFromError(error);
+
+    // ...
+  });
+}
 
 const handleSignInWithGoogle = () => {
+  const provider = new GoogleAuthProvider();
   signInWithPopup(auth, provider)
     .then((result) => {
       // Handle the authentication success
@@ -34,21 +69,42 @@ const handleSignInWithGoogle = () => {
       const credential = GoogleAuthProvider.credentialFromError(error);
       // You can display an error message to the user or log it
     });
+    
+    signedIn();
 };
+
+const signedIn = () => {
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      window.location.href = '/user?userID=${encodeURIComponent(user.displayName)}'; 
+    } else {
+      // User is signed out
+      // ...
+    }
+  });
+}
 
 export default function Home()
 {
   return (
-    <main className = "flex min-h-screen flex-col items-center justify-between p-24 bg-gray-200">
-      <div className="grid z-10 max-w-5xl w-full items-center justify between font-mono text-sm lg:flex">
-        <div className="content-center mb-32 grid text-center lg:max-w-5xl lg:w-full lg:mb-0 lg:grid-cols-4 lg:text-left">
+    <main className = "flex min-h-screen flex-col items-center justify-start p-24 bg-gray-100">
+      <Image
+          className="dark:invert"
+          src="/ched.png"
+          alt="chedulr Logo"
+          width={360}
+          height={72}
+          priority
+        />
+      <div className="flex flex-col z-10 max-w-md w-full items-center justify between font-mono text-sm border-solid border-black border-2 rounded-md bg-white transition-colors hover:bg-gray-300"> 
+        <div className="content-center mb-32 text-center lg:max-w-5xl lg:w-full lg:mb-0 lg:grid-cols-4 lg:text-left">
           <h1 className="text-lg text-center font-semibold">
               Sign in with one of the following services:
           </h1>
         </div>
         <div className="py-4 object-center">
-          <GoogleButton onClick={handleSignInWithGoogle}>Sign in with Google</GoogleButton>
-        </div> 
+          <GoogleButton onClick={handleSignInWithGoogle}>Sign in with Google</GoogleButton> 
+        </div>
       </div>
     </main>
   )
