@@ -4,6 +4,7 @@ import { initializeApp } from "firebase/app"
 import GoogleButton from "react-google-button";
 import AppleLogin from 'react-apple-login'
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDLxHL1vxPOHmJC93QpjVb_Bx1Y47mqha8",
@@ -51,32 +52,34 @@ const handleSignInWithApple = () => {
   });
 }
 
-const handleSignInWithGoogle = () => {
-  const provider = new GoogleAuthProvider();
-  signInWithPopup(auth, provider)
-    .then((result) => {
-      // Handle the authentication success
-      const credential = GoogleAuthProvider.credentialFromResult(result);
-      const token = credential.accessToken;
-      const user = result.user;
-      // You can also navigate to another page or update the UI here
-    })
-    .catch((error) => {
-      // Handle the authentication error
-      const errorCode = error.code;
-      const errorMessage = error.message;
-      const email = error.customData.email;
-      const credential = GoogleAuthProvider.credentialFromError(error);
-      // You can display an error message to the user or log it
-    });
-    
+export default function Home()
+{
+  const router = useRouter();
+  const handleSignInWithGoogle = () => { 
+    const provider = new GoogleAuthProvider();
+    signInWithPopup(auth, provider)
+      .then((result) => {
+        // Handle the authentication success
+        const credential = GoogleAuthProvider.credentialFromResult(result);
+        const token = credential.accessToken;
+        const user = result.user;
+        // You can also navigate to another page or update the UI here
+      })
+      .catch((error) => {
+        // Handle the authentication error
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        const email = error.customData.email;
+        const credential = GoogleAuthProvider.credentialFromError(error);
+        // You can display an error message to the user or log it
+      }); 
     signedIn();
-};
-
-const signedIn = () => {
+  };
+ 
+  const signedIn = () => {
   onAuthStateChanged(auth, (user) => {
     if (user) {
-      window.location.href = '/user?userID=${encodeURIComponent(user.displayName)}'; 
+      router.push('/user')
     } else {
       // User is signed out
       // ...
@@ -84,8 +87,6 @@ const signedIn = () => {
   });
 }
 
-export default function Home()
-{
   return (
     <main className = "flex min-h-screen flex-col items-center justify-start p-24 bg-gray-100">
       <Image
