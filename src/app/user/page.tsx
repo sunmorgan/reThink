@@ -23,7 +23,7 @@ export default function home()
     <main className="min-h-screen justify-start items-center">
         <div className="border-b border-black">
            <Image
-                className="dark:invert" 
+                className="invert dark:invert-0" 
                 src={"/ched.png"} 
                 alt={"chedulr logo"}
                 width = {120}
@@ -31,7 +31,7 @@ export default function home()
                 priority
            /> 
         </div> 
-        <div className="p-6">
+        <div className="dark:invert p-6">
             <h1>Welcome home, {user?.displayName}</h1>
         </div>
         <div className="grid p-20">
