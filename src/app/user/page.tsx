@@ -1,6 +1,7 @@
 'use client'
 import { initializeApp } from "firebase/app";
-import { getAuth, onAuthStateChanged} from "firebase/auth";
+import { getAuth } from "firebase/auth";
+import Image from "next/image";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDLxHL1vxPOHmJC93QpjVb_Bx1Y47mqha8",
@@ -19,10 +20,23 @@ const user = auth.currentUser;
 export default function home()
 { 
     return (
-    <main>
-        <div>
-            <h1>Welcome, {user?.displayName}</h1>
+    <main className="min-h-screen justify-start items-center">
+        <div className="border-b border-black">
+           <Image
+                className="dark:invert" 
+                src={"/ched.png"} 
+                alt={"chedulr logo"}
+                width = {120}
+                height = {24}
+                priority
+           /> 
+        </div> 
+        <div className="p-6">
+            <h1>Welcome home, {user?.displayName}</h1>
         </div>
+        <div className="grid p-20">
+            <h1>h1</h1>
+        </div> 
     </main> 
    )
 }
